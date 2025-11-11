@@ -39,22 +39,22 @@ body {
   justify-content: center;
 }
 
-.flight-category.ifr {
+.flight-category.IFR {
   background: #ff0000;
   color: white;
 }
 
-.flight-category.lifr {
+.flight-category.LIFR {
   background: #ff00ff;
   color: white;
 }
 
-.flight-category.mvfr {
+.flight-category.MVFR {
   background: #0000ff;
   color: white;
 }
 
-.flight-category.vfr {
+.flight-category.VFR {
   background: #00ff00;
   color: black;
 }
@@ -62,7 +62,7 @@ body {
 .header {
   flex: 1;
   border: 3px solid black;
-  padding: 12px;
+  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +72,7 @@ body {
 .airport-code {
   font-size: 36px;
   font-weight: bold;
-  letter-spacing: 6px;
+  letter-spacing: 0px;
 }
 
 .airport-name {
