@@ -44,8 +44,14 @@ def get_weather_data(airport):
         print("\n=== STATION RESPONSE ===")
         print_json(data=data1)
         arpt_name = data1["name"]
+        
+        # Get coordinates for nearby search
+        latitude = data1.get("latitude")
+        longitude = data1.get("longitude")
     except requests.exceptions.RequestException:
         arpt_name = airport  # Fallback to airport code
+        latitude = None
+        longitude = None
     
     # Get TAF (not all airports have TAF)
     try:
@@ -98,7 +104,7 @@ def get_weather_data(airport):
                 break
         
         if has_low_clouds:
-            maincode = "OVERCAST"
+            maincode = "CLOUDY"
         else:
             maincode = "SKY CLEAR"
 
@@ -125,7 +131,7 @@ def get_weather_data(airport):
         "wxcode": wxcode,
         "pa": pa,
         "da": da,
-        "obs": maincode
+        "obs": maincode,
     }
 
 @app.route("/")
