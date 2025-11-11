@@ -2,7 +2,6 @@ from flask import Flask, render_template
 from pathlib import Path
 from rich import print_json
 import requests
-import json
 from datetime import datetime
 
 
