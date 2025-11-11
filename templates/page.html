@@ -1,578 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Airport Weather Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
-            background: white;
-            color: black;
-            padding: 10px;
-            line-height: 1.3;
-        }
-
-        .container {
-            max-width: 100%;
-            height: calc(100vh - 20px);
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .flight-category {
-            flex: 0 0 140px;
-            text-align: center;
-            padding: 12px;
-            border: 3px solid black;
-            font-weight: bold;
-            font-size: 28px;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .flight-category.ifr {
-            background: #FF0000;
-            color: white;
-        }
-
-        .flight-category.lifr {
-            background: #FF00FF;
-            color: white;
-        }
-
-        .flight-category.mvfr {
-            background: #0000FF;
-            color: white;
-        }
-
-        .flight-category.vfr {
-            background: #00FF00;
-            color: black;
-        }
-
-        .header {
-            flex: 1;
-            border: 3px solid black;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .airport-code {
-            font-size: 36px;
-            font-weight: bold;
-            letter-spacing: 6px;
-        }
-
-        .airport-name {
-            font-size: 16px;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            display: flex;
-            gap: 10px;
-            flex: 1;
-            margin-bottom: 10px;
-        }
-
-        /* Left Panel - Current Weather */
-        .left-panel {
-            flex: 0 0 35%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .current-weather {
-            border: 3px solid black;
-            padding: 20px;
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #f0f0f0 0%, #ffffff 100%);
-            position: relative;
-        }
-
-        .weather-icon-display {
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-
-        .current-temp {
-            font-size: 72px;
-            font-weight: bold;
-            line-height: 1;
-            background: linear-gradient(180deg, #2d2d2d 0%, #000000 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .condition {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 8px;
-            padding: 6px 16px;
-            background: black;
-            color: white;
-            border-radius: 20px;
-            display: inline-block;
-        }
-
-        .wind-display {
-            border: 3px solid black;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .wind-label {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .wind-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .wind-arrow {
-            width: 60px;
-            height: 60px;
-        }
-
-        .arrow {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            transform: rotate(315deg); /* NW direction */
-        }
-
-        .wind-info {
-            text-align: left;
-        }
-
-        .wind-speed {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .wind-direction {
-            font-size: 16px;
-            margin-top: 2px;
-        }
-
-        /* Center Panel - Details */
-        .center-panel {
-            flex: 0 0 30%;
-            border: 3px solid black;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: repeat(6, 1fr);
-            height: 100%;
-        }
-
-        .detail-card {
-            border-bottom: 2px solid black;
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .detail-card:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .detail-value {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .detail-unit {
-            font-size: 14px;
-            font-weight: normal;
-        }
-
-        /* Right Panel - Forecast Chart */
-        .right-panel {
-            flex: 1;
-            border: 3px solid black;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .forecast-title {
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .chart-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chart-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-            justify-content: space-around;
-        }
-
-        .chart-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-        }
-
-        .chart-label {
-            font-size: 16px;
-            font-weight: bold;
-            width: 50px;
-            text-align: right;
-        }
-
-        .precip-info {
-            width: 70px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .precip-indicator {
-            font-size: 24px;
-            line-height: 1;
-        }
-
-        .precip-chance {
-            font-size: 13px;
-            font-weight: bold;
-            color: #000;
-        }
-
-        .temp-bars-container {
-            flex: 1;
-            position: relative;
-            height: 60px;
-            display: flex;
-            align-items: center;
-        }
-
-        .temp-bar-wrapper {
-            position: absolute;
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-
-        .temp-high {
-            background: #FF6B6B;
-            height: 40px;
-            border: 3px solid black;
-            border-radius: 0 6px 6px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 12px;
-            font-size: 18px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .temp-low {
-            background: #6BB6FF;
-            height: 40px;
-            border: 3px solid black;
-            border-radius: 6px 0 0 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 12px;
-            font-size: 18px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .dewpoint-marker {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 12px solid #FFD93D;
-            top: -2px;
-            transform: translateX(-50%);
-            filter: drop-shadow(0 0 2px black);
-        }
-
-        .dewpoint-marker::after {
-            content: '';
-            position: absolute;
-            width: 3px;
-            height: 8px;
-            background: #FFD93D;
-            left: 50%;
-            top: 0;
-            transform: translateX(-50%);
-            border-left: 1px solid black;
-            border-right: 1px solid black;
-        }
-
-        .temp-scale {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #ccc;
-        }
-
-        .chart-legend {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            font-size: 10px;
-            margin-top: 8px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .legend-box {
-            width: 14px;
-            height: 14px;
-            border: 2px solid black;
-        }
-
-        /* Footer */
-        .footer {
-            padding: 8px 0;
-            text-align: center;
-            font-size: 11px;
-            border-top: 2px solid black;
-        }
-    </style>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
     <div class="container">
-        <div class="top-bar">
-            <div class="flight-category ifr">
-                IFR
+      <div class="top-bar">
+        <div class="flight-category ifr">IFR</div>
+        <div class="header">
+          <div class="airport-code">GEG</div>
+          <div class="airport-name">Spokane International Airport</div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- Left Panel -->
+        <div class="left-panel">
+          <div class="current-weather">
+            <div class="weather-icon-display">☁️</div>
+            <div class="current-temp">42°F</div>
+            <div class="condition">OVERCAST</div>
+          </div>
+
+          <div class="wind-display">
+            <div class="wind-label">WIND</div>
+            <div class="wind-content">
+              <div class="wind-arrow">
+                <div class="arrow">↑</div>
+              </div>
+              <div class="wind-info">
+                <div class="wind-speed">12 mph</div>
+                <div class="wind-direction">NW (315°)</div>
+              </div>
             </div>
-            <div class="header">
-                <div class="airport-code">GEG</div>
-                <div class="airport-name">Spokane International Airport</div>
-            </div>
+          </div>
         </div>
 
-        <div class="main-content">
-            <!-- Left Panel -->
-            <div class="left-panel">
-                <div class="current-weather">
-                    <div class="current-temp">42°F</div>
-                    <div class="condition">OVERCAST</div>
-                </div>
-
-                <div class="wind-display">
-                    <div class="wind-label">WIND</div>
-                    <div class="wind-content">
-                        <div class="wind-arrow">
-                            <div class="arrow">↑</div>
-                        </div>
-                        <div class="wind-info">
-                            <div class="wind-speed">12 mph</div>
-                            <div class="wind-direction">NW (315°)</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Center Panel -->
+        <div class="center-panel">
+          <div class="details-grid">
+            <div class="detail-card">
+              <div class="detail-label">VISIBILITY</div>
+              <div class="detail-value">
+                2.5<span class="detail-unit"> mi</span>
+              </div>
             </div>
 
-            <!-- Center Panel -->
-            <div class="center-panel">
-                <div class="details-grid">
-                    <div class="detail-card">
-                        <div class="detail-label">VISIBILITY</div>
-                        <div class="detail-value">2.5<span class="detail-unit"> mi</span></div>
-                    </div>
-
-                    <div class="detail-card">
-                        <div class="detail-label">CEILING</div>
-                        <div class="detail-value">800<span class="detail-unit"> ft</span></div>
-                    </div>
-
-                    <div class="detail-card">
-                        <div class="detail-label">PRESSURE</div>
-                        <div class="detail-value">29.92<span class="detail-unit"> inHg</span></div>
-                    </div>
-
-                    <div class="detail-card">
-                        <div class="detail-label">HUMIDITY</div>
-                        <div class="detail-value">78<span class="detail-unit">%</span></div>
-                    </div>
-
-                    <div class="detail-card">
-                        <div class="detail-label">DEW POINT</div>
-                        <div class="detail-value">36°F</div>
-                    </div>
-
-                    <div class="detail-card">
-                        <div class="detail-label">FEELS LIKE</div>
-                        <div class="detail-value">38°F</div>
-                    </div>
-                </div>
+            <div class="detail-card">
+              <div class="detail-label">CEILING</div>
+              <div class="detail-value">
+                800<span class="detail-unit"> ft</span>
+              </div>
             </div>
 
-            <!-- Right Panel -->
-            <div class="right-panel">
-                <div class="forecast-title">5-Day Forecast</div>
-                <div class="chart-container">
-                    <div class="chart-grid">
-                        <div class="chart-row">
-                            <div class="chart-label">MON</div>
-                            <div class="precip-info">
-                                <div class="precip-indicator">💧</div>
-                                <div class="precip-chance">80%</div>
-                            </div>
-                            <div class="temp-bars-container">
-                                <div class="temp-bar-wrapper" style="left: 20%; width: 60%;">
-                                    <div class="temp-low" style="width: 40%;">35°</div>
-                                    <div class="temp-high" style="width: 60%;">48°</div>
-                                </div>
-                                <div class="dewpoint-marker" style="left: 50%;"></div>
-                            </div>
-                        </div>
-
-                        <div class="chart-row">
-                            <div class="chart-label">TUE</div>
-                            <div class="precip-info">
-                                <div class="precip-indicator">☀️</div>
-                                <div class="precip-chance">10%</div>
-                            </div>
-                            <div class="temp-bars-container">
-                                <div class="temp-bar-wrapper" style="left: 25%; width: 70%;">
-                                    <div class="temp-low" style="width: 35%;">38°</div>
-                                    <div class="temp-high" style="width: 65%;">52°</div>
-                                </div>
-                                <div class="dewpoint-marker" style="left: 55%;"></div>
-                            </div>
-                        </div>
-
-                        <div class="chart-row">
-                            <div class="chart-label">WED</div>
-                            <div class="precip-info">
-                                <div class="precip-indicator">⛅</div>
-                                <div class="precip-chance">30%</div>
-                            </div>
-                            <div class="temp-bars-container">
-                                <div class="temp-bar-wrapper" style="left: 22%; width: 65%;">
-                                    <div class="temp-low" style="width: 38%;">36°</div>
-                                    <div class="temp-high" style="width: 62%;">50°</div>
-                                </div>
-                                <div class="dewpoint-marker" style="left: 52%;"></div>
-                            </div>
-                        </div>
-
-                        <div class="chart-row">
-                            <div class="chart-label">THU</div>
-                            <div class="precip-info">
-                                <div class="precip-indicator">❄️</div>
-                                <div class="precip-chance">65%</div>
-                            </div>
-                            <div class="temp-bars-container">
-                                <div class="temp-bar-wrapper" style="left: 15%; width: 55%;">
-                                    <div class="temp-low" style="width: 45%;">32°</div>
-                                    <div class="temp-high" style="width: 55%;">46°</div>
-                                </div>
-                                <div class="dewpoint-marker" style="left: 45%;"></div>
-                            </div>
-                        </div>
-
-                        <div class="chart-row">
-                            <div class="chart-label">FRI</div>
-                            <div class="precip-info">
-                                <div class="precip-indicator">💧</div>
-                                <div class="precip-chance">50%</div>
-                            </div>
-                            <div class="temp-bars-container">
-                                <div class="temp-bar-wrapper" style="left: 12%; width: 50%;">
-                                    <div class="temp-low" style="width: 48%;">30°</div>
-                                    <div class="temp-high" style="width: 52%;">44°</div>
-                                </div>
-                                <div class="dewpoint-marker" style="left: 42%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="chart-legend">
-                        <div class="legend-item">
-                            <div class="legend-box" style="background: #FF6B6B;"></div>
-                            <span>High Temp</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-box" style="background: #4ECDC4;"></div>
-                            <span>Low Temp</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-box" style="background: #FFD93D;"></div>
-                            <span>Dew Point</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="detail-card">
+              <div class="detail-label">PRESSURE</div>
+              <div class="detail-value">
+                29.92<span class="detail-unit"> inHg</span>
+              </div>
             </div>
+
+            <div class="detail-card">
+              <div class="detail-label">HUMIDITY</div>
+              <div class="detail-value">
+                78<span class="detail-unit">%</span>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-label">DEW POINT</div>
+              <div class="detail-value">36°F</div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-label">FEELS LIKE</div>
+              <div class="detail-value">38°F</div>
+            </div>
+          </div>
         </div>
 
-        <div class="footer">
-            Updated: 2 minutes ago
+        <!-- Right Panel -->
+        <div class="right-panel">
+          <div class="taf-title">TAF - Terminal Aerodrome Forecast</div>
+          <div class="taf-box">
+            <pre class="taf-text">
+TAF KGEG 101730Z 1018/1118 31012KT P6SM BKN015 OVC025
+TEMPO 1018/1022 4SM -SHRA BR BKN008 OVC015
+FM102200 32008KT P6SM SCT020 BKN035
+FM110200 35006KT P6SM FEW035 SCT250
+FM110800 01008KT P6SM SKC</pre
+            >
+          </div>
         </div>
+      </div>
+
+      <div class="footer">Updated: 2 minutes ago</div>
     </div>
-</body>
+  </body>
 </html>
