@@ -24,19 +24,21 @@
         <div class="left-panel">
           <div class="current-weather">
             <div class="weather-icon-display">☁️</div>
-            <div class="current-temp">42°F</div>
-            <div class="condition">OVERCAST</div>
+            <div class="current-temp">{{temp}}°F</div>
+            <div class="condition">{{obs | upper}}</div>
           </div>
 
           <div class="wind-display">
             <div class="wind-label">WIND</div>
             <div class="wind-content">
               <div class="wind-arrow">
-                <div class="arrow">↑</div>
+                <div class="arrow" style="transform: rotate({{aarowdir}})">
+                  ↑
+                </div>
               </div>
               <div class="wind-info">
-                <div class="wind-speed">12 mph</div>
-                <div class="wind-direction">NW (315°)</div>
+                <div class="wind-speed">{{wind}} KTS</div>
+                <div class="wind-direction">{{winddir}}</div>
               </div>
             </div>
           </div>
@@ -48,39 +50,41 @@
             <div class="detail-card">
               <div class="detail-label">VISIBILITY</div>
               <div class="detail-value">
-                2.5<span class="detail-unit"> mi</span>
+                {{vis}}<span class="detail-unit"> SM</span>
               </div>
             </div>
 
             <div class="detail-card">
               <div class="detail-label">CEILING</div>
               <div class="detail-value">
-                800<span class="detail-unit"> ft</span>
+                {{cig[0]}}<span class="detail-unit"> ft</span>
               </div>
             </div>
 
             <div class="detail-card">
               <div class="detail-label">PRESSURE</div>
               <div class="detail-value">
-                29.92<span class="detail-unit"> inHg</span>
+                {{px}}<span class="detail-unit"> inHg</span>
               </div>
             </div>
 
             <div class="detail-card">
-              <div class="detail-label">HUMIDITY</div>
+              <div class="detail-label">PA/DA</div>
               <div class="detail-value">
-                78<span class="detail-unit">%</span>
+                {{pa}}' / {{da}}'<span class="detail-unit"></span>
               </div>
             </div>
 
             <div class="detail-card">
               <div class="detail-label">DEW POINT</div>
-              <div class="detail-value">36°F</div>
+              <div class="detail-value">{{dewpt}}°F</div>
             </div>
 
             <div class="detail-card">
-              <div class="detail-label">FEELS LIKE</div>
-              <div class="detail-value">38°F</div>
+              <div class="detail-label">Wx Observations</div>
+              {%for code in wxcode%}
+              <div class="detail-value">{{code}}</div>
+              {%endfor%}
             </div>
           </div>
         </div>
@@ -89,18 +93,14 @@
         <div class="right-panel">
           <div class="taf-title">TAF - Terminal Aerodrome Forecast</div>
           <div class="taf-box">
-            <pre class="taf-text">
-TAF KGEG 101730Z 1018/1118 31012KT P6SM BKN015 OVC025
-TEMPO 1018/1022 4SM -SHRA BR BKN008 OVC015
-FM102200 32008KT P6SM SCT020 BKN035
-FM110200 35006KT P6SM FEW035 SCT250
-FM110800 01008KT P6SM SKC</pre
-            >
+            {% for taf in tafraw %}
+            <p class="taf-text">{{ taf }}</p>
+            {% endfor %}
           </div>
         </div>
       </div>
 
-      <div class="footer">Updated: 2 minutes ago</div>
+      <div class="footer">UPDATED AT: {{time}}</div>
     </div>
   </body>
 </html>

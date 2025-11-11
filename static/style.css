@@ -165,7 +165,6 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 50px;
-  transform: rotate(315deg); /* NW direction */
 }
 
 .wind-info {
@@ -384,6 +383,17 @@ body {
   width: 14px;
   height: 14px;
   border: 2px solid black;
+}
+
+.taf-box {
+  font-family: "Courier New", monospace;
+  line-height: 1; /* tight line spacing */
+  white-space: pre-wrap; /* preserve newlines + wrap long text */
+  word-break: break-word; /* wrap long blocks */
+  margin: 0; /* no extra box spacing */
+  padding: 0; /* no padding */
+  color: #2a2c2e;
+  font-size: 0.95rem;
 }
 
 /* Footer */
