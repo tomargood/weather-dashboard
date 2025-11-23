@@ -4,7 +4,7 @@ from PIL import Image
 from waveshare_epd.epd7in3f import EPD
 
 # Path to your template
-HTML_FILE = "templates/dashboard.html"
+HTML_FILE = "templates/page.html"
 PDF_FILE = "dashboard.pdf"
 PNG_FILE = "dashboard.png"
 DISPLAY_TIME = 30  # seconds
