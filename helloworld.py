@@ -4,25 +4,24 @@
 import time
 from PIL import Image, ImageDraw, ImageFont
 
-# Import Waveshare e-paper driver
-from waveshare_epd import epd7in3f
+# Import the Waveshare driver from the same folder
+from epd7in3f import EPD
 
 def main():
     try:
         # Initialize display
-        epd = epd7in3f.EPD()
+        epd = EPD()
         epd.init()
         epd.Clear()
 
-        # Load font (make sure Font.ttc exists in your project folder)
-        font_path = "Font.ttc"  # Adjust if stored elsewhere
-        font = ImageFont.truetype(font_path, 48)
+        # Load font (adjust if you have a different path or font)
+        font = ImageFont.truetype("Font.ttc", 48)
 
         # Create blank canvas
         img = Image.new('RGB', (epd.width, epd.height), epd.WHITE)
         draw = ImageDraw.Draw(img)
 
-        # Rainbow colors supported by the display
+        # Rainbow colors supported by the panel
         rainbow = [epd.RED, epd.ORANGE, epd.YELLOW, epd.GREEN, epd.BLUE, epd.BLACK]
 
         y = 40
@@ -33,20 +32,20 @@ def main():
         # Display the image
         epd.display(epd.getbuffer(img))
 
-        # Hold for 10 seconds
+        # Keep displayed for 10 seconds
         time.sleep(10)
 
-        # Clear and sleep
+        # Clear and put the display to sleep
         epd.Clear()
         epd.sleep()
         print("Done!")
 
     except KeyboardInterrupt:
         print("Ctrl+C detected, exiting...")
-        epd7in3f.epdconfig.module_exit(cleanup=True)
+        epd7in3f.EPD.module_exit()  # cleanup if user interrupts
     except Exception as e:
         print("Error:", e)
-        epd7in3f.epdconfig.module_exit(cleanup=True)
+        epd7in3f.EPD.module_exit()
 
 if __name__ == "__main__":
     main()
