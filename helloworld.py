@@ -29,7 +29,7 @@ def main():
     time.sleep(10)
 
     # Clear and put the display to sleep
-    epd.clear()
+    epd.Clear()
     epd.sleep()
 
     print("Finished displaying Hello World!")
