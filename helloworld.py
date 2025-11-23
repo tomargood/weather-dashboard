@@ -7,7 +7,7 @@ from waveshare_epd.epd7in3f import EPD
 def main():
     # Initialize the display
     epd = EPD()
-    epd.Init()  # some versions use epd.Init() instead of epd.init()
+    epd.init()  # some versions use epd.Init() instead of epd.init()
     
     # Create a blank image (white background)
     image = Image.new('RGB', (epd.width, epd.height), epd.WHITE)
@@ -29,7 +29,7 @@ def main():
     time.sleep(10)
 
     # Clear and put the display to sleep
-    epd.Clear()
+    epd.clear()
     epd.sleep()
 
     print("Finished displaying Hello World!")
