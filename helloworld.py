@@ -1,38 +1,34 @@
 import time
-from PIL import Image, ImageDraw, ImageFont
-
-# Correct import from the local waveshare_epd folder
+from weasyprint import HTML
+from PIL import Image
 from waveshare_epd.epd7in3f import EPD
 
-def main():
-    # Initialize the display
+URL = "http://127.0.0.1:5000"  # Flask app
+PNG_FILE = "dashboard.png"
+DISPLAY_TIME = 30  # seconds
+
+def render_dashboard():
+    print(f"Rendering dashboard from {URL}...")
+    HTML(URL).write_png(PNG_FILE)
+    print(f"Saved PNG as {PNG_FILE}")
+
+def show_on_epaper():
+    print("Initializing e-paper display...")
     epd = EPD()
-    epd.init()  # some versions use epd.Init() instead of epd.init()
-    
-    # Create a blank image (white background)
-    image = Image.new('RGB', (epd.width, epd.height), epd.WHITE)
-    draw = ImageDraw.Draw(image)
+    epd.init()
 
-    # Load a font if available, fallback to default
-    try:
-        font = ImageFont.truetype("Font.ttc", 48)
-    except:
-        font = ImageFont.load_default()
-
-    # Draw Hello World
-    draw.text((20, 20), "HELLO WORLD", fill=epd.BLACK, font=font)
-
-    # Display the image
+    image = Image.open(PNG_FILE)
+    image = image.resize((epd.width, epd.height))
     epd.display(epd.getbuffer(image))
 
-    # Hold the display for 10 seconds
-    time.sleep(10)
+    print(f"Displaying for {DISPLAY_TIME} seconds...")
+    time.sleep(DISPLAY_TIME)
 
-    # Clear and put the display to sleep
+    print("Clearing display and sleeping...")
     epd.Clear()
     epd.sleep()
-
-    print("Finished displaying Hello World!")
+    print("Done.")
 
 if __name__ == "__main__":
-    main()
+    render_dashboard()
+    show_on_epaper()
