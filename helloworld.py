@@ -1,62 +1,52 @@
-
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding:utf-8 -*-
-import sys
-import os
+
 import time
-import logging
 from PIL import Image, ImageDraw, ImageFont
 
-# Setup Waveshare library paths
-picdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'pic')
-libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
-if os.path.exists(libdir):
-    sys.path.append(libdir)
-
+# Import Waveshare e-paper driver
 from waveshare_epd import epd7in3f
 
-logging.basicConfig(level=logging.DEBUG)
+def main():
+    try:
+        # Initialize display
+        epd = epd7in3f.EPD()
+        epd.init()
+        epd.Clear()
 
-try:
-    logging.info("7.3in e-Paper Simple Hello World")
+        # Load font (make sure Font.ttc exists in your project folder)
+        font_path = "Font.ttc"  # Adjust if stored elsewhere
+        font = ImageFont.truetype(font_path, 48)
 
-    epd = epd7in3f.EPD()
-    epd.init()
-    epd.Clear()
+        # Create blank canvas
+        img = Image.new('RGB', (epd.width, epd.height), epd.WHITE)
+        draw = ImageDraw.Draw(img)
 
-    # Choose a nice readable font
-    font = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 48)
+        # Rainbow colors supported by the display
+        rainbow = [epd.RED, epd.ORANGE, epd.YELLOW, epd.GREEN, epd.BLUE, epd.BLACK]
 
-    # Create a blank canvas
-    Himage = Image.new('RGB', (epd.width, epd.height), epd.WHITE)
-    draw = ImageDraw.Draw(Himage)
+        y = 40
+        for color in rainbow:
+            draw.text((20, y), "HELLO WORLD", font=font, fill=color)
+            y += 60
 
-    # Rainbow color list (panel supports BLACK/WHITE/RED/YELLOW/ORANGE/GREEN/BLUE)
-    rainbow_colors = [
-        epd.RED,
-        epd.ORANGE,
-        epd.YELLOW,
-        epd.GREEN,
-        epd.BLUE,
-        epd.BLACK
-    ]
+        # Display the image
+        epd.display(epd.getbuffer(img))
 
-    # Draw "Hello World" 6 times in rainbow colors
-    y = 40
-    for color in rainbow_colors:
-        draw.text((20, y), "HELLO WORLD", font=font, fill=color)
-        y += 60
+        # Hold for 10 seconds
+        time.sleep(10)
 
-    # Display it
-    epd.display(epd.getbuffer(Himage))
+        # Clear and sleep
+        epd.Clear()
+        epd.sleep()
+        print("Done!")
 
-    # Hold for 10 seconds
-    time.sleep(10)
+    except KeyboardInterrupt:
+        print("Ctrl+C detected, exiting...")
+        epd7in3f.epdconfig.module_exit(cleanup=True)
+    except Exception as e:
+        print("Error:", e)
+        epd7in3f.epdconfig.module_exit(cleanup=True)
 
-    # Clear and sleep
-    epd.Clear()
-    epd.sleep()
-
-except Exception as e:
-    logging.error(e)
-    epd7in3f.epdconfig.module_exit(cleanup=True)
+if __name__ == "__main__":
+    main()
